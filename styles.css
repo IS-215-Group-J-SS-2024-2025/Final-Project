@@ -1,0 +1,32 @@
+body {
+    background: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+}
+
+#dropArea {
+    max-width: 500px;
+    background: white;
+    padding: 3rem;
+    border: 2px dashed #6c757d;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#dropArea:hover {
+    background-color: #eef6ff;
+}
+
+.placeholder-glow>.placeholder {
+    height: 1.25rem;
+}
+
+.content-area {
+    display: none;
+}
