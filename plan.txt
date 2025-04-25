@@ -1,2 +1,11 @@
 use s3 bucket trigger just like in the assignment on sharp
+set trigger of lambda function - bucket, on new object
 set environment variables, BUCKET + URL
+process data on trigger
+- call rekognition service/api on data
+- save to file for testing of output
+
+- finally, create project using react
+- - return json data using promise
+- - expose function to for other modules to call
+- - if time allows, process with validation or rules
