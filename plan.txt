@@ -1,0 +1,2 @@
+use s3 bucket trigger just like in the assignment on sharp
+set environment variables, BUCKET + URL
