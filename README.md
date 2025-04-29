@@ -58,7 +58,11 @@ zip -r ../GroupJ-ImageProcessor.zip ./*
   - Upload the ZIP file `GroupJ-ImageProcessor.zip`.
   - Set environment variables:
     - `CHATGPT_ENDPOINT=https://is215-openai.upou.io/v1/chat/completions`
+<<<<<<< HEAD
     - `CHATGPT_API_KEY= {DEDICATED API-KEY HERE}`
+=======
+    - `CHATGPT_API_KEY={YOUR CODE HERE}`
+>>>>>>> c6a21377347c27ef3769630af07aee9c4fc14152
   - Add an S3 trigger from bucket `groupj-is215-image-uploads` (Event: **All object creates**, Prefix: `uploads/`).
 
 #### Lambda #2: `GroupJ-SignUpload`
