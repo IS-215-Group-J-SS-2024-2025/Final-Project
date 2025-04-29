@@ -1,46 +1,52 @@
-# S3 Bucket test
+# AWS S3 Bucket Setup
 
-## Table of Contents
+## Bucket Creation
 
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Usage](#usage)
-- [Contributing](../CONTRIBUTING.md)
+Follow these steps to create and configure your AWS S3 bucket:
 
-## About <a name = "about"></a>
+1. **Login to AWS Console**
+   - Navigate to Services → **S3**.
 
-Write about 1-2 paragraphs describing the purpose of your project.
+2. **Create Bucket**
+   - Click on **Create bucket**.
+   - **Bucket name**: `groupj-is215-image-uploads`
+   - **Region**: `us-east-1`
 
-## Getting Started <a name = "getting_started"></a>
+3. **Set Object Ownership**
+   - Under **Object ownership**, click **Edit**.
+   - Select **Bucket owner enforced**.
+   - Click **Save**.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+4. **Finalize Bucket Creation**
+   - Leave all other settings at their defaults.
+   - Click **Create bucket**.
 
-### Prerequisites
+## Create Folders
 
-What things you need to install the software and how to install them.
+Inside the bucket, create the following folders:
 
+- `uploads/`
+- `articles/`
+
+## Configure CORS
+
+To configure Cross-Origin Resource Sharing (CORS):
+
+1. Navigate to **Permissions** → **CORS configuration**.
+2. Click **Edit** and paste the following configuration:
+
+```json
+[
+  {
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["PUT","GET"],
+    "AllowedOrigins": ["*"],
+    "ExposeHeaders": []
+  }
+]
 ```
-Give examples
-```
 
-### Installing
+3. Click **Save**.
 
-A step by step series of examples that tell you how to get a development env running.
+Your AWS S3 bucket setup is now complete and ready for use.
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo.
-
-## Usage <a name = "usage"></a>
-
-Add notes about how to use the system.
