@@ -58,7 +58,7 @@ zip -r ../GroupJ-ImageProcessor.zip ./*
   - Upload the ZIP file `GroupJ-ImageProcessor.zip`.
   - Set environment variables:
     - `CHATGPT_ENDPOINT=https://is215-openai.upou.io/v1/chat/completions`
-    - `CHATGPT_API_KEY= {DEDICATED API-KEY HERE}`
+    - `CHATGPT_API_KEY={DEDICATED API KEY FROM BONUS ACTIVITY}`
   - Add an S3 trigger from bucket `groupj-is215-image-uploads` (Event: **All object creates**, Prefix: `uploads/`).
 
 #### Lambda #2: `GroupJ-SignUpload`
@@ -113,10 +113,18 @@ https://your-api-id.execute-api.region.amazonaws.com
 ## Usage <a name="usage"></a>
 
 ### `GroupJ-ImageToArticleProcessor`
-Automatically generates descriptive articles when images are uploaded to the `uploads/` directory of your configured S3 bucket. Call via API Gateway:
+Automatically generates descriptive articles from images uploaded via `GroupJ-SignUpload`. Call via API Gateway with JSON payload:
 
 ```bash
 POST https://your-api-id.execute-api.region.amazonaws.com/process-image
+```
+
+Payload example (use "key" from `GroupJ-SignUpload` response):
+
+```json
+{
+  "key": "uploads/1745626706399-images.jpg"
+}
 ```
 
 Example response:
