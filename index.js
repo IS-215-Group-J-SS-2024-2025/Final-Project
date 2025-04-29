@@ -47,32 +47,14 @@ exports.handler = function(event, context, callback) {
 
         // CALL API AND FORMAT RESULT
         client.detectLabels(params, function(err, response) {
-          var buffer = "START;";
+          var buffer = "";
           if (err) {
             buffer += err + `<br/>` + err.stack; // if an error occurred
           } else {
-            buffer += `Detected labels for: ${key}` + `<br/>`;
-            response.Labels.forEach(label => {
-              buffer += `Label:      ${label.Name}` + `<br/>`;
-              buffer += `Confidence: ${label.Confidence}`+ `<br/>`;
-              buffer += "Instances:"+ `<br/>`;
-              label.Instances.forEach(instance => {
-                let box = instance.BoundingBox
-                buffer += "  Bounding box:"+ `<br/>`;
-                buffer += `    Top:        ${box.Top}`+ `<br/>`;
-                buffer += `    Left:       ${box.Left}`+ `<br/>`;
-                buffer += `    Width:      ${box.Width}`+ `<br/>`;
-                buffer += `    Height:     ${box.Height}`+ `<br/>`;
-                buffer += `  Confidence: ${instance.Confidence}`+ `<br/>`;
-              })
-              buffer += "Parents:"+ `<br/>`;
-              label.Parents.forEach(parent => {
-                buffer += `  ${parent.Name}`+ `<br/>`;
-              })
-              buffer += "------------"+ `<br/>`;
-              buffer += "<br/>END"+ `<br/>`;
-            }) // for response.labels
+            buffer = JSON.stringify(response);
           } // if
+
+          // PLACE OUTPUT IN outs FOLDER
           S3.putObject({
             Body: buffer,
             Bucket: S3_BUCKET,
