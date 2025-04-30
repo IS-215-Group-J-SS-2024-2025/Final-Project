@@ -12,6 +12,10 @@
 // const headlineEl = document.getElementById("modalHeadline");
 // const bodyEl = document.getElementById("modalArticleBody");
 
+// let originalArticleBody = '';
+// let originalHeadline = '';
+// let selectedStyle = "simple"; // Default style
+
 // // -- Typing Animation Function
 // function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 4) {
 //     const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) || [text];
@@ -65,23 +69,30 @@
 //     const file = fileInput.files[0];
 //     if (!file) return;
 
-//     previewImage(file);  // Show image immediately
+//     previewImage(file);
 //     loadingArea.style.display = "block";
 //     resultModal.show();
+//     bodyEl.innerHTML = "";
+//     headlineEl.textContent = "";
 
 //     setTimeout(() => {
 //         fetch("sampleArticles.json")
 //             .then(res => res.json())
 //             .then(sampleArticles => {
 //                 const article = sampleArticles[Math.floor(Math.random() * sampleArticles.length)];
-//                 headlineEl.textContent = article.headline;
-//                 bodyEl.innerHTML = '';
-//                 typeWords(bodyEl, article.body);  // Animate text
+
+//                 originalHeadline = article.headline;
+//                 originalArticleBody = article.body;
+
+//                 headlineEl.textContent = originalHeadline;
+//                 typeWords(bodyEl, originalArticleBody);
 
 //                 loadingArea.style.display = "none";
+//                 contentArea.style.display = "block";
 //             })
 //             .catch(error => {
 //                 loadingArea.style.display = "none";
+//                 contentArea.style.display = "block";
 //                 headlineEl.textContent = "Error loading article";
 //                 bodyEl.innerHTML = "<p>There was a problem loading the article. Please try again.</p>";
 //                 imageEl.style.display = "none";
@@ -113,10 +124,18 @@
 //     }
 // });
 
-// // -- Trigger input on dropArea click
 // dropArea.addEventListener("click", () => fileInput.click());
 // fileInput.addEventListener("change", handleFileUpload);
 
+// document.getElementById("styleSelector").addEventListener("click", function (e) {
+//     if (e.target.matches("[data-style]")) {
+//         const buttons = this.querySelectorAll("[data-style]");
+//         buttons.forEach(btn => btn.classList.remove("active"));
+//         e.target.classList.add("active");
+//         selectedStyle = e.target.getAttribute("data-style");
+//         console.log("Selected style:", selectedStyle);
+//     }
+// });
 
 /**********LIVE**************/
 const signUrl = CONFIG.SIGN_URL;
@@ -133,6 +152,7 @@ const articleArea = document.getElementById('articleArea');
 
 let lastGetUrl = '';
 let resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+let selectedStyle = "simple"; // Default style
 
 // Helper: Show loading placeholders for article
 function showLoading() {
@@ -225,7 +245,8 @@ async function handleFile(file) {
         const proc = await fetch(processUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ key })
+            //body: JSON.stringify({ key })
+            body: JSON.stringify({ key, selectedStyle }) // with writing styles
         }).then(r => r.json());
 
         const { articleUrl } = proc.articleUrl ? proc : JSON.parse(proc.body);
@@ -317,5 +338,15 @@ dropArea.addEventListener('drop', (e) => {
         articleArea.style.display = 'none';
 
         handleFile(file);
+    }
+});
+
+document.getElementById("styleSelector").addEventListener("click", function (e) {
+    if (e.target.matches("[data-style]")) {
+        const buttons = this.querySelectorAll("[data-style]");
+        buttons.forEach(btn => btn.classList.remove("active"));
+        e.target.classList.add("active");
+        selectedStyle = e.target.getAttribute("data-style");
+        console.log("Selected style:", selectedStyle);
     }
 });

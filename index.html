@@ -21,10 +21,37 @@
     <img src="assets/images/icon.png" height="150" class="m-3" />
     <h1 class="fw-bold">AI News Article Generator</h1>
     <p class="text-muted">Upload an image and let AI write the article for you.</p>
+    <div class="mt-2">
+        <h6 class="fw-bold mb-2">Choose a writing style</h6>
+        <div id="styleSelector" class="btn-group gap-2 flex-wrap" role="group" aria-label="Style">
+            <button type="button" class="btn btn-outline-dark rounded-pill active" data-style="simple"
+                title="Easy-to-read, uses plain language. Good for accessibility or younger audiences.">
+                Simple
+            </button>
+
+            <button type="button" class="btn btn-outline-dark rounded-pill" data-style="formal"
+                title="Polished and professional tone. Suitable for business or official reports.">
+                Formal
+            </button>
+
+            <button type="button" class="btn btn-outline-dark rounded-pill" data-style="casual"
+                title="Friendly and conversational. Great for lifestyle or blog-style outputs.">
+                Casual
+            </button>
+
+            <button type="button" class="btn btn-outline-dark rounded-pill" data-style="creative"
+                title="More expressive and narrative-driven. Suitable for storytelling or soft news.">
+                Creative
+            </button>
+        </div>
+    </div>
+
 
     <!-- Drop Area -->
     <div id="dropArea" class="shadow-sm mt-3">
         <p class="lead text-muted mb-2">Drag & drop your image here or click to upload</p>
+
+
         <input type="file" id="fileInput" accept="image/*" hidden>
         <button type="button" class="btn btn-dark mt-2">Choose File</button>
     </div>
