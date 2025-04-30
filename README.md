@@ -1,1 +1,1 @@
-# EC2 Deployment Procedure
+# EC2 Deployment Procedures
