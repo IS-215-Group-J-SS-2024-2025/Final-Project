@@ -79,14 +79,23 @@
 
     <!-- Script -->
     <script>
-        // Toggle which config to use here
-        const ENV = 'dev'; // Change to 'prod' for production
+        // Select environment
+        const ENV = 'dev'; // Change to 'prod' as needed
 
+        // Create config script
         const configScript = document.createElement('script');
         configScript.src = ENV === 'prod' ? 'config.prod.js' : 'config.dev.js';
+
+        // Once config is loaded, load main script
+        configScript.onload = function () {
+            const mainScript = document.createElement('script');
+            mainScript.src = 'script.js';
+            document.head.appendChild(mainScript);
+        };
+
+        // Append config script to start
         document.head.appendChild(configScript);
     </script>
-    <script src="script.js" defer></script>
 </body>
 
 </html>
