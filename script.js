@@ -1,18 +1,154 @@
-const dropArea = document.getElementById('dropArea');
+/***********TEST***********/
+// const dropArea = document.getElementById('dropArea');
+// const fileInput = document.getElementById('fileInput');
+// const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+
+// const modalBody = document.getElementById('modalBody');
+// const loadingArea = modalBody.querySelector(".loading-area");
+// const contentArea = modalBody.querySelector(".content-area");
+
+// const imageEl = document.getElementById("articleImage");
+// const placeholder = document.getElementById("imagePlaceholder");
+// const headlineEl = document.getElementById("modalHeadline");
+// const bodyEl = document.getElementById("modalArticleBody");
+
+// // -- Typing Animation Function
+// function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 4) {
+//     const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) || [text];
+//     const paragraphs = [];
+
+//     for (let i = 0; i < sentences.length; i += sentencesPerParagraph) {
+//         const chunk = sentences.slice(i, i + sentencesPerParagraph).join(' ').trim();
+//         if (chunk.length > 0) paragraphs.push(chunk);
+//     }
+
+//     let paraIndex = 0;
+//     let wordIndex = 0;
+//     let words = [];
+
+//     targetElement.innerHTML = '';
+
+//     function typeNextWord() {
+//         if (paraIndex >= paragraphs.length) return;
+
+//         if (wordIndex === 0) {
+//             const p = document.createElement('p');
+//             targetElement.appendChild(p);
+//             words = paragraphs[paraIndex].split(/\s+/);
+//         }
+
+//         const currentPara = targetElement.lastChild;
+//         if (wordIndex < words.length) {
+//             currentPara.innerHTML += words[wordIndex] + ' ';
+//             wordIndex++;
+//             setTimeout(typeNextWord, wordDelay);
+//         } else {
+//             paraIndex++;
+//             wordIndex = 0;
+//             setTimeout(typeNextWord, 300);
+//         }
+//     }
+
+//     typeNextWord();
+// }
+
+// // -- Image Preview
+// function previewImage(file) {
+//     const localUrl = URL.createObjectURL(file);
+//     imageEl.src = localUrl;
+//     imageEl.style.display = "block";
+//     placeholder.style.display = "none";
+// }
+
+// // -- Handle File Upload
+// function handleFileUpload() {
+//     const file = fileInput.files[0];
+//     if (!file) return;
+
+//     previewImage(file);  // Show image immediately
+//     loadingArea.style.display = "block";
+//     resultModal.show();
+
+//     setTimeout(() => {
+//         fetch("sampleArticles.json")
+//             .then(res => res.json())
+//             .then(sampleArticles => {
+//                 const article = sampleArticles[Math.floor(Math.random() * sampleArticles.length)];
+//                 headlineEl.textContent = article.headline;
+//                 bodyEl.innerHTML = '';
+//                 typeWords(bodyEl, article.body);  // Animate text
+
+//                 loadingArea.style.display = "none";
+//             })
+//             .catch(error => {
+//                 loadingArea.style.display = "none";
+//                 headlineEl.textContent = "Error loading article";
+//                 bodyEl.innerHTML = "<p>There was a problem loading the article. Please try again.</p>";
+//                 imageEl.style.display = "none";
+//                 placeholder.style.display = "none";
+//                 console.error("Fetch error:", error);
+//             });
+//     }, 1500);
+// }
+
+// // -- Drag & Drop Events
+// ['dragenter', 'dragover'].forEach(event => {
+//     dropArea.addEventListener(event, e => {
+//         e.preventDefault();
+//         dropArea.classList.add('border-primary', 'drag-over');
+//     });
+// });
+// ['dragleave', 'drop'].forEach(event => {
+//     dropArea.addEventListener(event, e => {
+//         e.preventDefault();
+//         dropArea.classList.remove('border-primary', 'drag-over');
+//     });
+// });
+
+// dropArea.addEventListener('drop', (e) => {
+//     const files = e.dataTransfer.files;
+//     if (files.length) {
+//         fileInput.files = files;
+//         handleFileUpload();
+//     }
+// });
+
+// // -- Trigger input on dropArea click
+// dropArea.addEventListener("click", () => fileInput.click());
+// fileInput.addEventListener("change", handleFileUpload);
+
+
+/**********LIVE**************/
+const signUrl = CONFIG.SIGN_URL;
+const processUrl = CONFIG.PROCESS_URL;
+
 const fileInput = document.getElementById('fileInput');
-const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+const dropArea = document.getElementById('dropArea');
+const chooseFileBtn = dropArea.querySelector('button');
+const articleImage = document.getElementById('articleImage');
+const modalHeadline = document.getElementById('modalHeadline');
+const modalArticleBody = document.getElementById('modalArticleBody');
+const loadingArea = document.querySelector('.loading-area');
+const articleArea = document.getElementById('articleArea');
 
-const modalBody = document.getElementById('modalBody');
-const loadingArea = modalBody.querySelector(".loading-area");
-const contentArea = modalBody.querySelector(".content-area");
+let lastGetUrl = '';
+let resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
 
-const imageEl = document.getElementById("articleImage");
-const placeholder = document.getElementById("imagePlaceholder");
-const headlineEl = document.getElementById("modalHeadline");
-const bodyEl = document.getElementById("modalArticleBody");
+// Helper: Show loading placeholders for article
+function showLoading() {
+    loadingArea.style.display = 'block';    // show skeleton
+    articleArea.style.display = 'none';      // hide real article
+}
 
-// -- Typing Animation Function
+// Helper: Show real article
+function showArticle() {
+    loadingArea.style.display = 'none';     // hide skeleton
+    articleArea.style.display = 'block';    // show real article
+}
+
+// Custom Word-by-Word Typing
 function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 4) {
+    // Break the text into sentences
     const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) || [text];
     const paragraphs = [];
 
@@ -25,12 +161,13 @@ function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 
     let wordIndex = 0;
     let words = [];
 
-    targetElement.innerHTML = '';
+    targetElement.innerHTML = ''; // Clear previous
 
     function typeNextWord() {
         if (paraIndex >= paragraphs.length) return;
 
         if (wordIndex === 0) {
+            // Start new paragraph
             const p = document.createElement('p');
             targetElement.appendChild(p);
             words = paragraphs[paraIndex].split(/\s+/);
@@ -44,74 +181,141 @@ function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 
         } else {
             paraIndex++;
             wordIndex = 0;
-            setTimeout(typeNextWord, 300);
+            setTimeout(typeNextWord, 300); // pause between paragraphs
         }
     }
 
     typeNextWord();
 }
 
-// -- Image Preview
-function previewImage(file) {
-    const localUrl = URL.createObjectURL(file);
-    imageEl.src = localUrl;
-    imageEl.style.display = "block";
-    placeholder.style.display = "none";
-}
 
-// -- Handle File Upload
-function handleFileUpload() {
-    const file = fileInput.files[0];
+// Upload handler
+async function handleFile(file) {
     if (!file) return;
 
-    previewImage(file);  // Show image immediately
-    loadingArea.style.display = "block";
-    resultModal.show();
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Unsupported file type. Please upload a JPEG, PNG, GIF, or WEBP image.');
+        return;
+    }
 
-    setTimeout(() => {
-        fetch("sampleArticles.json")
-            .then(res => res.json())
-            .then(sampleArticles => {
-                const article = sampleArticles[Math.floor(Math.random() * sampleArticles.length)];
-                headlineEl.textContent = article.headline;
-                bodyEl.innerHTML = '';
-                typeWords(bodyEl, article.body);  // Animate text
+    try {
+        showLoading(); // Show loading skeleton
 
-                loadingArea.style.display = "none";
-            })
-            .catch(error => {
-                loadingArea.style.display = "none";
-                headlineEl.textContent = "Error loading article";
-                bodyEl.innerHTML = "<p>There was a problem loading the article. Please try again.</p>";
-                imageEl.style.display = "none";
-                placeholder.style.display = "none";
-                console.error("Fetch error:", error);
-            });
-    }, 1500);
+        // 1) Get presigned upload URL
+        const { uploadUrl, getUrl, key } = await fetch(signUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: file.name, filetype: file.type })
+        }).then(r => r.json());
+
+        // 2) Upload the file to S3
+        await fetch(uploadUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': file.type },
+            body: file
+        });
+
+        // 3) Show the image
+        articleImage.src = getUrl;
+        articleImage.style.display = 'block';
+        lastGetUrl = getUrl;
+
+        // 4) Trigger processing
+        const proc = await fetch(processUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key })
+        }).then(r => r.json());
+
+        const { articleUrl } = proc.articleUrl ? proc : JSON.parse(proc.body);
+
+        // 5) Fetch the article content
+        const responseText = await fetch(articleUrl).then(r => r.text());
+
+        // 6) Parse content into title & article body
+        let title = 'Generated Article';
+        let body = responseText;
+
+        try {
+            const parsed = JSON.parse(responseText);
+            if (typeof parsed === 'object' && parsed.title && parsed.article) {
+                title = parsed.title;
+                body = parsed.article;
+            }
+        } catch (e) {
+            // fallback to markdown format
+            const lines = responseText.trim().split('\n');
+            if (lines.length > 1 && lines[0].startsWith('# ')) {
+                title = lines[0].substring(2).trim(); // Remove "# "
+                body = lines.slice(2).join('\n').trim(); // Skip title and blank line
+            }
+        }
+
+        // 7) Populate modal content
+        modalHeadline.textContent = title;
+        modalArticleBody.textContent = ''; // Clear old content
+
+        // 8) Start animated typing
+        typeWords(modalArticleBody, body, 50);
+
+        // 9) Show article area
+        showArticle();
+
+    } catch (err) {
+        console.error('Upload or processing error:', err);
+        alert('Something went wrong. Please try again.');
+        resultModal.hide();
+    }
 }
 
-// -- Drag & Drop Events
-['dragenter', 'dragover'].forEach(event => {
-    dropArea.addEventListener(event, e => {
-        e.preventDefault();
-        dropArea.classList.add('border-primary', 'drag-over');
-    });
+
+// Click "Choose File" button
+chooseFileBtn.onclick = () => fileInput.click();
+
+// Handle file input
+fileInput.onchange = () => {
+    const file = fileInput.files[0];
+    if (file) {
+        const localImageUrl = URL.createObjectURL(file);
+        articleImage.src = localImageUrl;
+        articleImage.style.display = 'block';
+
+        resultModal.show();  // Show modal immediately
+
+        // Reset UI
+        loadingArea.style.display = 'block';    // Start with loading placeholder visible
+        articleArea.style.display = 'none';     // Hide article content
+
+        handleFile(file); // Start uploading & processing
+    }
+};
+
+// Drag & Drop
+dropArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropArea.classList.add('border-primary', 'drag-over');
 });
-['dragleave', 'drop'].forEach(event => {
-    dropArea.addEventListener(event, e => {
-        e.preventDefault();
-        dropArea.classList.remove('border-primary', 'drag-over');
-    });
+
+dropArea.addEventListener('dragleave', () => {
+    dropArea.classList.remove('border-primary', 'drag-over');
 });
 
 dropArea.addEventListener('drop', (e) => {
-    const files = e.dataTransfer.files;
-    if (files.length) {
-        fileInput.files = files;
-        handleFileUpload();
+    e.preventDefault();
+    dropArea.classList.remove('border-primary', 'drag-over');
+
+    const file = e.dataTransfer.files[0];
+    if (file) {
+        const localImageUrl = URL.createObjectURL(file);
+        articleImage.src = localImageUrl;
+        articleImage.style.display = 'block';
+
+        resultModal.show();
+
+        loadingArea.style.display = 'block';
+        articleArea.style.display = 'none';
+
+        handleFile(file);
     }
 });
-
-// -- Trigger input on dropArea click
-dropArea.addEventListener("click", () => fileInput.click());
-fileInput.addEventListener("change", handleFileUpload);
