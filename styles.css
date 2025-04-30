@@ -27,6 +27,13 @@ body {
     height: 1.25rem;
 }
 
-.content-area {
-    display: none;
+#articleArea {
+    font-family: "Newsreader", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+#modalArticleBody p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
