@@ -23,6 +23,12 @@ body {
     background-color: #eef6ff;
 }
 
+#dropArea.drag-over {
+    transform: scale(1.05);
+    transition: all 0.2s linear;
+    background: #e5faff;
+}
+
 .placeholder-glow>.placeholder {
     height: 1.25rem;
 }

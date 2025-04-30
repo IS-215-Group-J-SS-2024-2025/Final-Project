@@ -94,13 +94,13 @@ function handleFileUpload() {
 ['dragenter', 'dragover'].forEach(event => {
     dropArea.addEventListener(event, e => {
         e.preventDefault();
-        dropArea.classList.add('border-primary');
+        dropArea.classList.add('border-primary', 'drag-over');
     });
 });
 ['dragleave', 'drop'].forEach(event => {
     dropArea.addEventListener(event, e => {
         e.preventDefault();
-        dropArea.classList.remove('border-primary');
+        dropArea.classList.remove('border-primary', 'drag-over');
     });
 });
 
