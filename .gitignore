@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 node_modules
+=======
+# .gitignore
+config.dev.js
+>>>>>>> f4f7f243b18ba56dfc7ac403a58ba916fdd9ca02
