@@ -1,120 +1,151 @@
-GroupJ AWS Rekog + Article Generation Using Serverless Microservices Architecture
+
+# GroupJ AWS Rekog + Article Generation Using Serverless Microservices Architecture
+
 This repository features a Node.js-based static front-end that allows users to upload images and receive AI-generated descriptive articles through an AWS Serverless backend (API Gateway + Lambda + S3).
 
-🚀 Live Demo
-You can view the live demo of the project deployed in an EC2 instance here: Live Demo
+## 🚀 Live Demo
 
-🚀 Project Overview
-Front-end: A static HTML page (index.html) served via Node.js (or any static host), providing an image picker and displaying the resulting article. You can find this in the feature/frontend-ui branch.
+You can view the live demo of the project deployed in an EC2 instance here: [Live Demo](https://project.pfescotido.is215.upou.io/)
 
-Backend: AWS API Gateway exposes the /process-image endpoint:
+---
 
-/process-image — accepts image uploads via PUT to the S3 images/ folder, triggering a Lambda function that:
+## 🚀 Project Overview
 
-Uses Amazon Rekognition (from /feature/rekognition-analysis) to detect labels in the image.
+* **Front-end**: A static HTML page (`index.html`) served via Node.js (or any static host), providing an image picker and displaying the resulting article. You can find this in the `feature/frontend-ui` branch.
+* **Backend**: AWS API Gateway exposes the **`/process-image`** endpoint:
 
-Uses ChatGPT (from /feature/chatgpt-generation) to generate an article based on those labels.
+  1. **`/process-image`** — accepts image uploads via PUT to the S3 `images/` folder, triggering a Lambda function that:
 
-Saves the generated article as a .txt file in the articles/ folder on S3.
+     * Uses Amazon Rekognition (from `/feature/rekognition-analysis`) to detect labels in the image.
+     * Uses ChatGPT (from `/feature/chatgpt-generation`) to generate an article based on those labels.
+     * Saves the generated article as a `.txt` file in the `articles/` folder on S3.
 
-/sign-upload — provides pre-signed URLs for secure image uploads (optional helper service).
+  2. **`/sign-upload`** — provides pre-signed URLs for secure image uploads (optional helper service).
 
-📂 Folder Structure
-⚠️ This layout reflects the feature/frontend-ui branch.
+---
 
-bash
-Copy
+## 📂 Folder Structure
+
+> ⚠️ This layout reflects the `feature/frontend-ui` branch.
+
+```
 feature/frontend-ui/
 ├─ index.html         # Static front-end HTML + JS
 ├─ package.json       # Node.js metadata (if using a local server)
 └─ README.md          # Project documentation
 
-Tip: You can serve index.html from any static host (e.g., S3 + CloudFront, GitHub Pages) without using Node.js.
+feature/rekognition-analysis/
+├─ index.js           # Lambda function for Rekognition analysis
+└─ README.md          # Rekognition analysis details
 
-⚙️ Prerequisites
-Node.js (v14+ recommended) — needed only if you plan to run a local HTTP server.
+feature/chatgpt-generation/
+├─ index.js           # Lambda function for ChatGPT article generation
+└─ README.md          # ChatGPT generation details
+```
 
-AWS Resources (already deployed):
+> **Tip:** You can serve `index.html` from any static host (e.g., S3 + CloudFront, GitHub Pages) without using Node.js.
 
-S3 buckets for images/ and articles/
+---
 
-API Gateway endpoints
+## ⚙️ Prerequisites
 
-Lambda functions with Rekognition and ChatGPT integration
+* **Node.js** (v14+ recommended) — needed only if you plan to run a local HTTP server.
+* **AWS Resources** (already deployed):
 
-🛠️ Installation & Local Serve
-Clone this repository:
+  * S3 buckets for `images/` and `articles/`
+  * API Gateway endpoints
+  * Lambda functions with Rekognition and ChatGPT integration
 
-bash
-Copy
-git clone <your-repo-url>
-cd <your-project-folder>
-Initialize the Node.js project (if you haven’t already):
+---
 
-bash
-Copy
-npm init -y
-Install the necessary dependencies:
+## 🛠️ Installation & Local Serve
 
-bash
-Copy
-npm install
-(Optional) Install a static server for local testing:
+1. Clone this repository:
 
-bash
-Copy
-npm install -g http-server
-Start the server:
+   ```bash
+   git clone <your-repo-url>
+   cd <your-project-folder>
+   ```
 
-bash
-Copy
-http-server . -p 8080
-Open the browser at http://localhost:8080.
+2. Initialize the Node.js project (if you haven’t already):
 
-🔧 Configuration
-Update the following constants in the index.html file at the top of the <script> block:
+   ```bash
+   npm init -y
+   ```
 
-js
-Copy
+3. Install the necessary dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. (Optional) Install a static server for local testing:
+
+   ```bash
+   npm install -g http-server
+   ```
+
+5. Start the server:
+
+   ```bash
+   http-server . -p 8080
+   ```
+
+6. Open the browser at `http://localhost:8080`.
+
+---
+
+## 🔧 Configuration
+
+Update the following constants in the `index.html` file at the top of the `<script>` block:
+
+```js
 const IMAGE_URL_BASE   = "https://YOUR_IMAGE_BUCKET_DOMAIN";
 const ARTICLE_URL_BASE = "https://YOUR_IMAGE_BUCKET_DOMAIN";
-Replace YOUR_IMAGE_BUCKET_DOMAIN with your S3 bucket (or CloudFront) URL that exposes the images/ and articles/ directories.
+```
 
-If you're securing uploads using the /sign-upload endpoint, point the upload logic to your API Gateway signing endpoint instead of directly uploading to S3.
+* Replace `YOUR_IMAGE_BUCKET_DOMAIN` with your S3 bucket (or CloudFront) URL that exposes the `images/` and `articles/` directories.
 
-⚡ How It Works
-Select & Upload: The user selects an image and clicks Upload & Generate.
+If you're securing uploads using the `/sign-upload` endpoint, point the upload logic to your API Gateway signing endpoint instead of directly uploading to S3.
 
-Image Upload: The front-end issues a PUT request to IMAGE_URL_BASE/images/<filename>.
+---
 
-Processing:
+## ⚡ How It Works
 
-S3 triggers the ImageProcessor Lambda, which combines functionality from the /feature/rekognition-analysis and /feature/chatgpt-generation functions.
+1. **Select & Upload**: The user selects an image and clicks **Upload & Generate**.
+2. **Image Upload**: The front-end issues a `PUT` request to `IMAGE_URL_BASE/images/<filename>`.
+3. **Processing**:
 
-The Lambda uses Amazon Rekognition to analyze the image and detect labels.
+   * S3 triggers the **ImageProcessor** Lambda, which combines functionality from the `/feature/rekognition-analysis` and `/feature/chatgpt-generation` functions.
 
-It sends those labels as a prompt to ChatGPT to generate a descriptive article.
+     * The Lambda uses Amazon Rekognition to analyze the image and detect labels.
+     * It sends those labels as a prompt to ChatGPT to generate a descriptive article.
+   * The article is saved as a `.txt` file in the `articles/` folder in S3.
+4. **Polling**: The front-end polls `ARTICLE_URL_BASE/articles/<filename>.txt` until the article is ready.
+5. **Display**: Once available, the text is rendered on the page.
 
-The article is saved as a .txt file in the articles/ folder in S3.
+---
 
-Polling: The front-end polls ARTICLE_URL_BASE/articles/<filename>.txt until the article is ready.
+## 📦 Deployment
 
-Display: Once available, the text is rendered on the page.
+1. **Front-end**: Upload `index.html` to your static host (e.g., S3 + CloudFront, GitHub Pages).
+2. **Backend**: Deploy the Swagger/OpenAPI definition to API Gateway, update the Lambda code (combining functions from `/feature/rekognition-analysis` and `/feature/chatgpt-generation`), and ensure S3 triggers and permissions are properly set as mentioned in the documentation.
 
-📦 Deployment
-Front-end: Upload index.html to your static host (e.g., S3 + CloudFront, GitHub Pages).
+---
 
-Backend: Deploy the Swagger/OpenAPI definition to API Gateway, update the Lambda code (combining functions from /feature/rekognition-analysis and /feature/chatgpt-generation), and ensure S3 triggers and permissions are properly set as mentioned in the documentation.
+## 🔒 Security Considerations
 
-🔒 Security Considerations
-Use pre-signed URLs (/sign-upload) to avoid public write access on the images/ bucket.
+* Use **pre-signed URLs** (`/sign-upload`) to avoid public write access on the `images/` bucket.
+* Enable **HTTPS** via CloudFront or a custom domain.
+* Apply least privilege IAM roles for Rekognition & S3.
 
-Enable HTTPS via CloudFront or a custom domain.
+---
 
-Apply least privilege IAM roles for Rekognition & S3.
+## 🤝 Contributing
 
-🤝 Contributing
 Feel free to open issues or pull requests for enhancements, bug fixes, or documentation improvements.
 
-Happy coding!
+---
+
+*Happy coding!*
 
