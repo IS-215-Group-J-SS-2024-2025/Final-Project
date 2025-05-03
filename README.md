@@ -34,13 +34,6 @@ feature/frontend-ui/
 ├─ package.json       # Node.js metadata (if using a local server)
 └─ README.md          # Project documentation
 
-feature/rekognition-analysis/
-├─ index.js           # Lambda function for Rekognition analysis
-└─ README.md          # Rekognition analysis details
-
-feature/chatgpt-generation/
-├─ index.js           # Lambda function for ChatGPT article generation
-└─ README.md          # ChatGPT generation details
 ```
 
 > **Tip:** You can serve `index.html` from any static host (e.g., S3 + CloudFront, GitHub Pages) without using Node.js.
