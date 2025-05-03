@@ -1,0 +1,45 @@
+body {
+    background: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+}
+
+#dropArea {
+    max-width: 500px;
+    background: white;
+    padding: 3rem;
+    border: 2px dashed #6c757d;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#dropArea:hover {
+    background-color: #eef6ff;
+}
+
+#dropArea.drag-over {
+    transform: scale(1.05);
+    transition: all 0.2s linear;
+    background: #e5faff;
+}
+
+.placeholder-glow>.placeholder {
+    height: 1.25rem;
+}
+
+#articleArea {
+    font-family: "Newsreader", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+#modalArticleBody p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}

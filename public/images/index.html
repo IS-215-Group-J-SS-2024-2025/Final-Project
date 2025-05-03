@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI News Article Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/images/icon.ico">
+</head>
+
+<body>
+    <img src="assets/images/background.jpg"
+        style="height: 100%;width: 100%;position: absolute;z-index: -1;opacity: 0.2;" />
+    <img src="assets/images/icon.png" height="150" class="m-3" />
+    <h1 class="fw-bold">AI News Article Generator</h1>
+    <p class="text-muted">Upload an image and let AI write the article for you.</p>
+    <div class="mt-2">
+        <h6 class="fw-bold mb-2">Choose a writing style</h6>
+        <div id="styleSelector" class="btn-group gap-2 flex-wrap" role="group" aria-label="Style">
+            <button type="button" class="btn btn-outline-dark rounded-pill active" data-style="simple"
+                title="Easy-to-read, uses plain language. Good for accessibility or younger audiences.">
+                Simple
+            </button>
+
+            <button type="button" class="btn btn-outline-dark rounded-pill" data-style="formal"
+                title="Polished and professional tone. Suitable for business or official reports.">
+                Formal
+            </button>
+
+            <button type="button" class="btn btn-outline-dark rounded-pill" data-style="casual"
+                title="Friendly and conversational. Great for lifestyle or blog-style outputs.">
+                Casual
+            </button>
+
+            <button type="button" class="btn btn-outline-dark rounded-pill" data-style="creative"
+                title="More expressive and narrative-driven. Suitable for storytelling or soft news.">
+                Creative
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Drop Area -->
+    <div id="dropArea" class="shadow-sm mt-3">
+        <p class="lead text-muted mb-2">Drag & drop your image here or click to upload</p>
+
+
+        <input type="file" id="fileInput" accept="image/*" hidden>
+        <button type="button" class="btn btn-dark mt-2">Choose File</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content overflow-hidden">
+                <div class="modal-body p-0" id="modalBody">
+                    <!-- Actual Content -->
+                    <div class="content-area text-start">
+                        <div id="imageWrapper" class="bg-light position-relative"
+                            style="height: 300px; overflow: hidden;">
+                            <div id="imagePlaceholder"
+                                class="w-100 h-100 placeholder-glow bg-secondary bg-opacity-25 position-absolute top-0 start-0 z-1">
+                            </div>
+                            <img id="articleImage" class="img-fluid w-100 h-100 object-fit-cover position-relative z-2"
+                                style="display: none;" alt="Article Image"
+                                onerror="this.onerror=null; this.src='https://placehold.co/1280x720?text=Image+Not+Available';">
+                        </div>
+
+                        <!-- Placeholder Loading -->
+                        <div class="loading-area">
+                            <div class="p-4">
+                                <p class="placeholder-glow text-start"><span class="placeholder col-7 rounded"></span>
+                                </p>
+                                <p class="placeholder-glow text-start gap-2 d-grid">
+                                    <span class="placeholder col-12 rounded"></span>
+                                    <span class="placeholder col-12 rounded"></span>
+                                    <span class="placeholder col-12 rounded"></span>
+                                    <span class="placeholder col-6 rounded"></span>
+                                    <span class="placeholder col-12 rounded mt-4"></span><span
+                                        class="placeholder col-10 rounded"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="articleArea" class="p-4">
+                            <h2 id="modalHeadline" class="fw-bold"></h2>
+                            <div id="modalArticleBody" class="mt-3 fs-5"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script -->
+    <script>
+        // Select environment
+        const ENV = 'dev'; // Change to 'prod' as needed
+
+        // Create config script
+        const configScript = document.createElement('script');
+        configScript.src = ENV === 'prod' ? 'config.prod.js' : 'config.dev.js';
+
+        // Once config is loaded, load main script
+        configScript.onload = function () {
+            const mainScript = document.createElement('script');
+            mainScript.src = 'script.js';
+            document.head.appendChild(mainScript);
+        };
+
+        // Append config script to start
+        document.head.appendChild(configScript);
+    </script>
+</body>
+
+</html>
