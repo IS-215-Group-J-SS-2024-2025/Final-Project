@@ -213,7 +213,7 @@ function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 
 async function handleFile(file) {
     if (!file) return;
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
         alert('Unsupported file type. Please upload a JPEG, PNG, GIF, or WEBP image.');
         return;
