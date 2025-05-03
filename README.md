@@ -1,7 +1,3 @@
-Got it! Here's the updated README with the **Live Demo** section placed after the description you mentioned:
-
----
-
 # GroupJ AWS Rekog + Article Generation Using Serverless Microservices Architecture
 
 This repository features a Node.js-based static front-end that allows users to upload images and receive AI-generated descriptive articles through an AWS Serverless backend (API Gateway + Lambda + S3).
