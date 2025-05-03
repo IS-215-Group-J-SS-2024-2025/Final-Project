@@ -24,18 +24,6 @@ You can view the live demo of the project deployed in an EC2 instance here: [Liv
 
 ---
 
-## 📂 Folder Structure
-
-> ⚠️ This layout reflects the `feature/frontend-ui` branch.
-
-```
-feature/frontend-ui/
-├─ index.html         # Static front-end HTML + JS
-├─ package.json       # Node.js metadata (if using a local server)
-└─ README.md          # Project documentation
-
-```
-
 > **Tip:** You can serve `index.html` from any static host (e.g., S3 + CloudFront, GitHub Pages) without using Node.js.
 
 ---
