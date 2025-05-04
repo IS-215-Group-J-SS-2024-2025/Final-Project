@@ -43,7 +43,7 @@ exports.handler = async (event) => {
       model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: `Write a descriptive article about an image containing: ${labels}.` }
+        { role: "user", content: `Write a descriptive article about an image containing: ${labels}. Make sure to not mention anything related to labels or confidence to make your article more natural-sounding.` }
       ]
     });
     console.log("• Sending to ChatGPT:", chatPayload);
