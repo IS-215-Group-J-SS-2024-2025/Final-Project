@@ -1,143 +1,3 @@
-/***********TEST***********/
-// const dropArea = document.getElementById('dropArea');
-// const fileInput = document.getElementById('fileInput');
-// const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
-
-// const modalBody = document.getElementById('modalBody');
-// const loadingArea = modalBody.querySelector(".loading-area");
-// const contentArea = modalBody.querySelector(".content-area");
-
-// const imageEl = document.getElementById("articleImage");
-// const placeholder = document.getElementById("imagePlaceholder");
-// const headlineEl = document.getElementById("modalHeadline");
-// const bodyEl = document.getElementById("modalArticleBody");
-
-// let originalArticleBody = '';
-// let originalHeadline = '';
-// let selectedStyle = "simple"; // Default style
-
-// // -- Typing Animation Function
-// function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 4) {
-//     const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) || [text];
-//     const paragraphs = [];
-
-//     for (let i = 0; i < sentences.length; i += sentencesPerParagraph) {
-//         const chunk = sentences.slice(i, i + sentencesPerParagraph).join(' ').trim();
-//         if (chunk.length > 0) paragraphs.push(chunk);
-//     }
-
-//     let paraIndex = 0;
-//     let wordIndex = 0;
-//     let words = [];
-
-//     targetElement.innerHTML = '';
-
-//     function typeNextWord() {
-//         if (paraIndex >= paragraphs.length) return;
-
-//         if (wordIndex === 0) {
-//             const p = document.createElement('p');
-//             targetElement.appendChild(p);
-//             words = paragraphs[paraIndex].split(/\s+/);
-//         }
-
-//         const currentPara = targetElement.lastChild;
-//         if (wordIndex < words.length) {
-//             currentPara.innerHTML += words[wordIndex] + ' ';
-//             wordIndex++;
-//             setTimeout(typeNextWord, wordDelay);
-//         } else {
-//             paraIndex++;
-//             wordIndex = 0;
-//             setTimeout(typeNextWord, 300);
-//         }
-//     }
-
-//     typeNextWord();
-// }
-
-// // -- Image Preview
-// function previewImage(file) {
-//     const localUrl = URL.createObjectURL(file);
-//     imageEl.src = localUrl;
-//     imageEl.style.display = "block";
-//     placeholder.style.display = "none";
-// }
-
-// // -- Handle File Upload
-// function handleFileUpload() {
-//     const file = fileInput.files[0];
-//     if (!file) return;
-
-//     previewImage(file);
-//     loadingArea.style.display = "block";
-//     resultModal.show();
-//     bodyEl.innerHTML = "";
-//     headlineEl.textContent = "";
-
-//     setTimeout(() => {
-//         fetch("sampleArticles.json")
-//             .then(res => res.json())
-//             .then(sampleArticles => {
-//                 const article = sampleArticles[Math.floor(Math.random() * sampleArticles.length)];
-
-//                 originalHeadline = article.headline;
-//                 originalArticleBody = article.body;
-
-//                 headlineEl.textContent = originalHeadline;
-//                 typeWords(bodyEl, originalArticleBody);
-
-//                 loadingArea.style.display = "none";
-//                 contentArea.style.display = "block";
-//             })
-//             .catch(error => {
-//                 loadingArea.style.display = "none";
-//                 contentArea.style.display = "block";
-//                 headlineEl.textContent = "Error loading article";
-//                 bodyEl.innerHTML = "<p>There was a problem loading the article. Please try again.</p>";
-//                 imageEl.style.display = "none";
-//                 placeholder.style.display = "none";
-//                 console.error("Fetch error:", error);
-//             });
-//     }, 1500);
-// }
-
-// // -- Drag & Drop Events
-// ['dragenter', 'dragover'].forEach(event => {
-//     dropArea.addEventListener(event, e => {
-//         e.preventDefault();
-//         dropArea.classList.add('border-primary', 'drag-over');
-//     });
-// });
-// ['dragleave', 'drop'].forEach(event => {
-//     dropArea.addEventListener(event, e => {
-//         e.preventDefault();
-//         dropArea.classList.remove('border-primary', 'drag-over');
-//     });
-// });
-
-// dropArea.addEventListener('drop', (e) => {
-//     const files = e.dataTransfer.files;
-//     if (files.length) {
-//         fileInput.files = files;
-//         handleFileUpload();
-//     }
-// });
-
-// dropArea.addEventListener("click", () => fileInput.click());
-// fileInput.addEventListener("change", handleFileUpload);
-
-// document.getElementById("styleSelector").addEventListener("click", function (e) {
-//     if (e.target.matches("[data-style]")) {
-//         const buttons = this.querySelectorAll("[data-style]");
-//         buttons.forEach(btn => btn.classList.remove("active"));
-//         e.target.classList.add("active");
-//         selectedStyle = e.target.getAttribute("data-style");
-//         console.log("Selected style:", selectedStyle);
-//     }
-// });
-
-/**********LIVE**************/
 const signUrl = CONFIG.SIGN_URL;
 const processUrl = CONFIG.PROCESS_URL;
 
@@ -168,7 +28,6 @@ function showArticle() {
 
 // Custom Word-by-Word Typing
 function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 4) {
-    // Break the text into sentences
     const sentences = text.match(/[^.!?]+[.!?]+(\s|$)/g) || [text];
     const paragraphs = [];
 
@@ -181,13 +40,16 @@ function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 
     let wordIndex = 0;
     let words = [];
 
-    targetElement.innerHTML = ''; // Clear previous
+    targetElement.innerHTML = '';
+    document.getElementById('downloadPdfBtn').style.display = 'none'; // hide button during typing
 
     function typeNextWord() {
-        if (paraIndex >= paragraphs.length) return;
+        if (paraIndex >= paragraphs.length) {
+            document.getElementById('downloadPdfBtn').style.display = 'inline-block'; // show after done
+            return;
+        }
 
         if (wordIndex === 0) {
-            // Start new paragraph
             const p = document.createElement('p');
             targetElement.appendChild(p);
             words = paragraphs[paraIndex].split(/\s+/);
@@ -209,19 +71,32 @@ function typeWords(targetElement, text, wordDelay = 50, sentencesPerParagraph = 
 }
 
 
+
 // Upload handler
 async function handleFile(file) {
     if (!file) return;
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const allowedTypes = ['image/jpeg', 'image/png'];
+    const allowedExtensions = ['jpg', 'jpeg', 'png'];
+    const extension = file.name.split('.').pop().toLowerCase();
+
+    // Validate MIME type
     if (!allowedTypes.includes(file.type)) {
-        alert('Unsupported file type. Please upload a JPEG, PNG, GIF, or WEBP image.');
-        return;
+        alert('Unsupported file type. Please upload a JPG or PNG image.');
+        return; // Don't proceed further
     }
 
-    try {
-        showLoading(); // Show loading skeleton
+    // Validate extension (extra safety)
+    if (!allowedExtensions.includes(extension)) {
+        alert('Unsupported file extension. Please upload a JPG or PNG image.');
+        return; // Don't proceed further
+    }
 
+    // ✅ If it passed checks, now show the modal
+    resultModal.show();
+    showLoading(); // Show loading skeleton
+
+    try {
         // 1) Get presigned upload URL
         const { uploadUrl, getUrl, key } = await fetch(signUrl, {
             method: 'POST',
@@ -236,17 +111,16 @@ async function handleFile(file) {
             body: file
         });
 
-        // 3) Show the image
+        // 3) Show the image in modal
         articleImage.src = getUrl;
         articleImage.style.display = 'block';
         lastGetUrl = getUrl;
 
-        // 4) Trigger processing
+        // 4) Trigger processing Lambda
         const proc = await fetch(processUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            //body: JSON.stringify({ key })
-            body: JSON.stringify({ key, selectedStyle }) // with writing styles
+            body: JSON.stringify({ key, style: selectedStyle }) // Pass writing style
         }).then(r => r.json());
 
         const { articleUrl } = proc.articleUrl ? proc : JSON.parse(proc.body);
@@ -254,7 +128,7 @@ async function handleFile(file) {
         // 5) Fetch the article content
         const responseText = await fetch(articleUrl).then(r => r.text());
 
-        // 6) Parse content into title & article body
+        // 6) Parse content
         let title = 'Generated Article';
         let body = responseText;
 
@@ -265,22 +139,19 @@ async function handleFile(file) {
                 body = parsed.article;
             }
         } catch (e) {
-            // fallback to markdown format
+            // Fallback if JSON parsing fails
             const lines = responseText.trim().split('\n');
             if (lines.length > 1 && lines[0].startsWith('# ')) {
-                title = lines[0].substring(2).trim(); // Remove "# "
-                body = lines.slice(2).join('\n').trim(); // Skip title and blank line
+                title = lines[0].substring(2).trim();
+                body = lines.slice(2).join('\n').trim();
             }
         }
 
-        // 7) Populate modal content
+        // 7) Show headline & article
         modalHeadline.textContent = title;
-        modalArticleBody.textContent = ''; // Clear old content
+        modalArticleBody.textContent = '';
 
-        // 8) Start animated typing
-        typeWords(modalArticleBody, body, 50);
-
-        // 9) Show article area
+        typeWords(modalArticleBody, body, 50); // Animated typing
         showArticle();
 
     } catch (err) {
@@ -301,8 +172,9 @@ fileInput.onchange = () => {
         const localImageUrl = URL.createObjectURL(file);
         articleImage.src = localImageUrl;
         articleImage.style.display = 'block';
+        document.getElementById('downloadPdfBtn').style.display = 'none';
 
-        resultModal.show();  // Show modal immediately
+        //resultModal.show();  // Show modal immediately
 
         // Reset UI
         loadingArea.style.display = 'block';    // Start with loading placeholder visible
@@ -332,7 +204,7 @@ dropArea.addEventListener('drop', (e) => {
         articleImage.src = localImageUrl;
         articleImage.style.display = 'block';
 
-        resultModal.show();
+        //resultModal.show();
 
         loadingArea.style.display = 'block';
         articleArea.style.display = 'none';
@@ -350,3 +222,19 @@ document.getElementById("styleSelector").addEventListener("click", function (e) 
         console.log("Selected style:", selectedStyle);
     }
 });
+
+function downloadPDF() {
+    let filename = modalHeadline.textContent.trim() || 'article';
+    filename = filename.replace(/[<>:"\/\\|?*\x00-\x1F]/g, '').slice(0, 50) + '.pdf';
+
+    html2pdf().set({
+        margin: 0.5,
+        filename: filename,
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+        html2canvas: {
+            scale: 2,
+            useCORS: true
+        },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    }).from(document.getElementById('articleArea')).save();
+}

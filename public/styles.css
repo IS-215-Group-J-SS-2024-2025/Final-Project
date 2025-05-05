@@ -43,3 +43,21 @@ body {
     margin-bottom: 1.5rem;
     line-height: 1.6;
 }
+
+
+/* For pdf creation styling */
+/* #fullArticleArea {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+#fullArticleArea * {
+    page-break-inside: auto;
+    break-inside: auto;
+} */
+
+h2,
+p {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
