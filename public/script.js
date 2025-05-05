@@ -149,6 +149,13 @@ async function handleFile(file) {
 
         // 7) Show headline & article
         modalHeadline.textContent = title;
+        // Show writing style badge
+        const prettyStyle = selectedStyle.charAt(0).toUpperCase() + selectedStyle.slice(1);
+        document.getElementById('styleBadge').innerHTML = `
+        Writing style: 
+        <span class="badge rounded-pill bg-dark p-2 px-3">${prettyStyle}</span>
+`;
+
         modalArticleBody.textContent = '';
 
         typeWords(modalArticleBody, body, 50); // Animated typing
